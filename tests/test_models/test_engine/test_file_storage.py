@@ -77,7 +77,8 @@ test_file_storage.py"
             FileStorage.__doc__, None, "FileStorage class needs a docstring"
         )
         self.assertTrue(
-            len(FileStorage.__doc__) >= 1, "FileStorage class needs a docstring"
+            len(FileStorage.__doc__) >= 1,
+            "FileStorage class needs a docstring"
         )
 
     def test_fs_func_docstrings(self):
