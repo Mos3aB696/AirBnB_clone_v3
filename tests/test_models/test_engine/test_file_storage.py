@@ -93,21 +93,6 @@ test_file_storage.py"
                 "{:s} method needs a docstring".format(func[0]),
             )
 
-    def test_get(self):
-        """Test get returns the correct object."""
-        state = State(name="Test State")
-        state.save()
-        self.assertEqual(storage.get(State, state.id).name, "Test State")
-
-
-def test_count(self):
-    """Test count returns the correct number of objects."""
-    self.assertEqual(storage.count(), 0)
-    State(name="Test State  1").save()
-    State(name="Test State  2").save()
-    self.assertEqual(storage.count(State), 2)
-    self.assertEqual(storage.count(), 2)
-
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
