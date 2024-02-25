@@ -16,11 +16,9 @@ from models.state import State
 from models.user import User
 import json
 import os
-import pycodestyle
+import pep8
 import unittest
-from models.engine import db_storage
 
-storage = db_storage.DBStorage()
 FileStorage = file_storage.FileStorage
 classes = {
     "Amenity": Amenity,
@@ -43,7 +41,7 @@ class TestFileStorageDocs(unittest.TestCase):
 
     def test_pep8_conformance_file_storage(self):
         """Test that models/engine/file_storage.py conforms to PEP8."""
-        pep8s = pycodestyle.StyleGuide(quiet=True)
+        pep8s = pep8.StyleGuide(quiet=True)
         result = pep8s.check_files(["models/engine/file_storage.py"])
         self.assertEqual(
             result.total_errors, 0, "Found code style errors (and warnings)."
@@ -51,7 +49,7 @@ class TestFileStorageDocs(unittest.TestCase):
 
     def test_pep8_conformance_test_file_storage(self):
         """Test tests/test_models/test_file_storage.py conforms to PEP8."""
-        pep8s = pycodestyle.StyleGuide(quiet=True)
+        pep8s = pep8.StyleGuide(quiet=True)
         result = pep8s.check_files(
             [
                 "tests/test_models/test_engine/\
@@ -85,8 +83,8 @@ test_file_storage.py"
         """Test for the presence of docstrings in FileStorage methods"""
         for func in self.fs_f:
             self.assertIsNot(
-                func[1].__doc__, None, "{:s} method needs a docstring".format(
-                    func[0])
+                func[1].__doc__, None,
+                "{:s} method needs a docstring".format(func[0])
             )
             self.assertTrue(
                 len(func[1].__doc__) >= 1,
@@ -99,7 +97,7 @@ class TestFileStorage(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t == "db", "not testing file storage")
     def test_all_returns_dict(self):
-        """Test that all returns the FileStorage.__objects attr"""
+        """Test all returns the FileStorage.__objects attr"""
         storage = FileStorage()
         new_dict = storage.all()
         self.assertEqual(type(new_dict), dict)
@@ -107,7 +105,7 @@ class TestFileStorage(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t == "db", "not testing file storage")
     def test_new(self):
-        """test that new adds an object to the FileStorage.__objects attr"""
+        """test new adds an object to the FileStorage.__objects attr"""
         storage = FileStorage()
         save = FileStorage._FileStorage__objects
         FileStorage._FileStorage__objects = {}
@@ -123,7 +121,7 @@ class TestFileStorage(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t == "db", "not testing file storage")
     def test_save(self):
-        """Test that save properly saves objects to file.json"""
+        """Test save properly saves objects to file.json"""
         storage = FileStorage()
         new_dict = {}
         for key, value in classes.items():
@@ -140,3 +138,32 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == "db", "not testing file storage")
+    def test_get(self):
+        """method tests to obtain an instance file storage"""
+        self.storage = FileStorage()
+        self.storage.reload()
+        dic = {"name": "Vecindad"}
+        instance = State(**dic)
+        self.storage.new(instance)
+        self.storage.save()
+        self.storage = FileStorage()
+        get_instance = self.storage.get(State, instance.id)
+        self.assertEqual(get_instance, instance)
+
+    @unittest.skipIf(models.storage_t == "db", "not testing file storage")
+    def test_count(self):
+        """ count method file storage"""
+
+        self.storage = FileStorage()
+        self.storage.reload()
+        dic = {"name": "Dallas"}
+        state = State(**dic)
+        self.storage.new(state)
+        dic = {"name": "New"}
+        city = City(**dic)
+        self.storage.new(city)
+        self.storage.save()
+        c = self.storage.count()
+        self.assertEqual(len(self.storage.all()), c)
