@@ -94,4 +94,3 @@ def modify_place(place_id):
             setattr(place, key, value)
     place.save()
     return make_response(jsonify(place.to_dict()), 200)
-
