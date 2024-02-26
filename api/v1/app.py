@@ -1,41 +1,32 @@
 #!/usr/bin/python3
-"""
-  This Python script sets up a Flask web application with API
-  routes and a database connection that
-  closes when the application context is torn down.
+"""Creating flask app."""
 
-  :param exception: The `exception` parameter in the `teardown_appcontext`
-  function is a reference to any exception that might have occurred
-  during the application context. This parameter allows you to handle
-  exceptions or perform cleanup actions before the application context
-  is torn down. In your
-  code snippet, the `teardown_appcontext`
-"""
-from flask import Flask, make_response, jsonify
 from api.v1.views import app_views
+from flask import Flask, jsonify
 from models import storage
-import os
-
+from os import getenv
+from flask_cors import CORS
 app = Flask(__name__)
-
 app.register_blueprint(app_views)
 
 
+cors = CORS(app, resources={r"/api/*": {"origins": "0.0.0.0"}})
+
+
 @app.teardown_appcontext
-def teardown_appcontext(exception):
-    """
-    Close the storage connection.
-    """
+def teardown_appcontext(self):
+    """Close the storage."""
     storage.close()
 
 
 @app.errorhandler(404)
-def page_not_found(error):
-    """Custom 404 page"""
+def error_handler(error):
+    """Handle for 404 errors."""
     return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == "__main__":
-    host = os.environ.get('HBNB_API_HOST', '0.0.0.0')
-    port = int(os.environ.get('HBNB_API_PORT', 5000))
+    host = getenv("HBNB_API_HOST", "0.0.0.0")
+    port = getenv("HBNB_API_PORT", "5000")
+
     app.run(host=host, port=port, threaded=True)
