@@ -19,3 +19,13 @@ class Amenity(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes Amenity"""
         super().__init__(*args, **kwargs)
+
+    def to_dict(self):
+        """Convert the Amenity object to a dictionary."""
+        return {
+            "__class__": self.__class__.__name__,
+            "id": self.id,
+            "name": self.name,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
