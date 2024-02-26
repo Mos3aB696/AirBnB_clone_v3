@@ -2,17 +2,6 @@
 """
     The functions define routes for handling CRUD operations
     on City objects in a Flask API.
-
-    :param state_id: The `state_id` parameter is used to identify
-    a specific State object. It is typically passed as part of
-    the URL path when making requests to the API endpoints related to states
-    and cities. In the context of the provided Flask routes,
-    `state_id` is used to retrieve, create, or
-
-    update
-    :return: The code provided contains several routes for handling
-    CRUD operations on City objects in a Flask application.
-    Here is a summary of what is being returned by each route:
 """
 
 from flask import jsonify, abort, request, make_response
@@ -27,10 +16,6 @@ from models.city import City
 def get_cities(state_id):
     """
     Retrieve a list of all City objects of a State.
-
-    Returns:
-        JSON response: A JSON response containing a list of all City objects
-        of a State.
     """
     state = storage.get(State, state_id)
     if state is None:
