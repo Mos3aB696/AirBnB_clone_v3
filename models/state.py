@@ -12,17 +12,6 @@ from sqlalchemy.orm import relationship
 class State(BaseModel, Base):
     """Representation of state """
 
-    def to_dict(self):
-        """Convert the State object to a dictionary."""
-        state_dict = {
-            "__class__": self.__class__.__name__,
-            "created_at": self.created_at,
-            "id": self.id,
-            "name": self.name,
-            "updated_at": self.updated_at
-        }
-        return state_dict
-
     if models.storage_t == "db":
         __tablename__ = 'states'
         name = Column(String(128), nullable=False)
