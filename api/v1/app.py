@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 """Creating flask app."""
 
 from api.v1.views import app_views
