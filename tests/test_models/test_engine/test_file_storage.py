@@ -16,8 +16,9 @@ from models.state import State
 from models.user import User
 import json
 import os
-import pycodestyle
+import pep8
 import unittest
+import storage
 FileStorage = file_storage.FileStorage
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -32,14 +33,14 @@ class TestFileStorageDocs(unittest.TestCase):
 
     def test_pep8_conformance_file_storage(self):
         """Test that models/engine/file_storage.py conforms to PEP8."""
-        pep8s = pycodestyle.StyleGuide(quiet=True)
+        pep8s = pep8.StyleGuide(quiet=True)
         result = pep8s.check_files(['models/engine/file_storage.py'])
         self.assertEqual(result.total_errors, 0,
                          "Found code style errors (and warnings).")
 
     def test_pep8_conformance_test_file_storage(self):
         """Test tests/test_models/test_file_storage.py conforms to PEP8."""
-        pep8s = pycodestyle.StyleGuide(quiet=True)
+        pep8s = pep8.StyleGuide(quiet=True)
         result = pep8s.check_files(['tests/test_models/test_engine/\
 test_file_storage.py'])
         self.assertEqual(result.total_errors, 0,
@@ -113,3 +114,23 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+
+def test_fs_storage_get(self):
+        '''
+            Test to check if get method retrieves correct obj
+        '''
+        new_o = State(name="Cali")
+        obj = storage.get("State", "fake_id")
+        self.assertIsNone(obj)
+
+def test_fs_storage_count(self):
+    '''
+        Test to check if count method retrieves correct count
+    '''
+    storage.reload()
+    all_count = self.storage.count()
+    self.assertIsInstance(all_count, int)
+    cls_count = self.storage.count("State")
+    self.assertIsInstance(cls_count, int)
+    self.assertGreaterEqual(all_count, cls_count)
